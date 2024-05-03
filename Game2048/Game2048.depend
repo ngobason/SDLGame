@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1714585445 source:c:\users\administrator\desktop\mygame\game2048\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	"defs.h"
+	"graphics.h"
+	"tile.h"
+	"matrix.h"
+
+1714581965 c:\users\administrator\desktop\mygame\game2048\defs.h
+
+1714584671 c:\users\administrator\desktop\mygame\game2048\graphics.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<string>
+	"defs.h"
+
+1714585440 c:\users\administrator\desktop\mygame\game2048\tile.h
+	<iostream>
+	<SDL.h>
+	<SDL_ttf.h>
+	<string>
+	"defs.h"
+
+1714585368 c:\users\administrator\desktop\mygame\game2048\matrix.h
+	<iostream>
+	<ctime>
+	<string>
+	"tile.h"
+	"defs.h"
+	<SDL.h>
+
