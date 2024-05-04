@@ -205,7 +205,7 @@ public:
         if (moved){
             string title = "Score: " + to_string(score);
             SDL_SetWindowTitle(window, title.c_str());
-            generateTile();
+            GenerateTile();
 
             if (CheckIfWin()) {
                     string WinMessage = "You Win! Score: " + to_string(score);

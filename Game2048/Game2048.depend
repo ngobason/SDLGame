@@ -33,3 +33,37 @@
 	"defs.h"
 	<SDL.h>
 
+1714812683 source:c:\users\administrator\desktop\github\sdlgame\game2048\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	"defs.h"
+	"graphics.h"
+	"tile.h"
+	"matrix.h"
+
+1714812714 c:\users\administrator\desktop\github\sdlgame\game2048\defs.h
+
+1714813476 c:\users\administrator\desktop\github\sdlgame\game2048\graphics.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<string>
+	"defs.h"
+
+1714813474 c:\users\administrator\desktop\github\sdlgame\game2048\tile.h
+	<iostream>
+	<SDL.h>
+	<SDL_ttf.h>
+	<string>
+	"defs.h"
+
+1714813834 c:\users\administrator\desktop\github\sdlgame\game2048\matrix.h
+	<iostream>
+	<ctime>
+	<string>
+	"tile.h"
+	"defs.h"
+	<SDL.h>
+
