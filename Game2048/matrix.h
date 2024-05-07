@@ -1,12 +1,12 @@
 #ifndef _MATRIX__H
 #define _MATRIX__H
 
-#include <iostream>
+#include <fstream>
 #include <ctime>
 #include <string>
+#include <SDL.h>
 #include "tile.h"
 #include "defs.h"
-#include <SDL.h>
 
 using namespace std;
 
@@ -14,12 +14,14 @@ class Matrix{
 private:
     Tile tiles[ROWS][COLS];
     int score = 0;
+    int highScore = 0;
+    int currentScore = 0;
 
 public:
     Matrix(){
         for (int i = 0; i < ROWS; ++i) {
             for (int j = 0; j < COLS; ++j) {
-                tiles[i][j] = Tile(168+116*j, 100+116*i, 115, 0, {128, 128, 128});
+                tiles[i][j] = Tile(216+124*j, 188+123*i, 121, 0, {128, 128, 128});
             }
         }
         GenerateTile();
@@ -60,7 +62,8 @@ public:
             for (int i = 1; i < ROWS; ++i){
                 if (tiles[i][j].getValue() != 0){
                     int row = i;
-                    while (row > 0 && (tiles[row - 1][j].getValue() == 0 || tiles[row - 1][j].getValue() == tiles[i][j].getValue())){
+                    while (row > 0 && (tiles[row - 1][j].getValue() == 0 ||
+                                       tiles[row - 1][j].getValue() == tiles[i][j].getValue())){
                         if (tiles[row - 1][j].getValue() == tiles[i][j].getValue()){
                             mergeTiles(i, j, row - 1, j);
                             moved = true;
@@ -85,7 +88,8 @@ public:
             for (int i = ROWS - 2; i >= 0; --i){
                 if (tiles[i][j].getValue() != 0){
                     int row = i;
-                    while (row < ROWS - 1 && (tiles[row + 1][j].getValue() == 0 || tiles[row + 1][j].getValue() == tiles[i][j].getValue())){
+                    while (row < ROWS - 1 && (tiles[row + 1][j].getValue() == 0 ||
+                                              tiles[row + 1][j].getValue() == tiles[i][j].getValue())){
                         if (tiles[row + 1][j].getValue() == tiles[i][j].getValue()){
                             mergeTiles(i, j, row + 1, j);
                             moved = true;
@@ -160,7 +164,7 @@ public:
     bool CheckIfWin(){
         for (int i = 0; i < ROWS; ++i){
             for (int j = 0; j < COLS; ++j){
-                if (tiles[i][j].getValue() == 2048){
+                if (tiles[i][j].getValue() == 128){
                     return true;
                 }
             }
@@ -184,6 +188,48 @@ public:
         return true;
     }
 
+
+    void updateCurrentScore(){
+        currentScore = score;
+    }
+
+    void renderScore(SDL_Renderer* renderer, TTF_Font* font, Graphics& graphics, int x, int y) {
+        SDL_Color textColor = {128, 128, 128};
+        string currentScoreText = to_string(currentScore);
+        graphics.renderText(currentScoreText, font, textColor, x, y, renderer);
+    }
+
+    int getHighScore(){
+        return highScore;
+    }
+
+    void renderHighScore(SDL_Renderer* renderer, TTF_Font* font, Graphics& graphics, int x, int y){
+        SDL_Color textColor = {128, 128, 128};
+        string highScoreText = to_string(highScore);
+        graphics.renderText(highScoreText, font, textColor, x, y, renderer);
+    }
+
+    void saveHighScore(){
+        ofstream file("highscore.txt");
+        if (file.is_open()){
+            file << highScore;
+            file.close();
+        }
+    }
+
+    void loadHighScore(){
+        ifstream file("highscore.txt");
+        if (file.is_open()) {
+            file >> highScore;
+            file.close();
+        }
+    }
+
+    void resetHighScore(){
+        highScore = 0;
+        saveHighScore();
+    }
+
     void Events(SDL_Window* window, SDL_Event event){
         if (event.type == SDL_KEYDOWN) {
             bool moved = false;
@@ -200,22 +246,19 @@ public:
                 case SDLK_RIGHT:
                     moved = moveRight();
                     break;
+                case SDLK_r:
+                    resetHighScore();
+                    cout << "High score has been reset" << endl;
+                    break;
             }
 
         if (moved){
-            string title = "Score: " + to_string(score);
-            SDL_SetWindowTitle(window, title.c_str());
             GenerateTile();
-
-            if (CheckIfWin()) {
-                    string WinMessage = "You Win! Score: " + to_string(score);
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "CONGRATULATIONS", WinMessage.c_str(), window);
+            updateCurrentScore();
+            if (score > highScore){
+                    highScore = score;
+                    saveHighScore();
                 }
-        }
-
-        if (isGameOver()) {
-            string LoseMessage = "Game Over! Score: " + to_string(score);
-            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "OOPS, LET'S TRY AGAIN", LoseMessage.c_str(), window);
             }
         }
     }

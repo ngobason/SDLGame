@@ -4,34 +4,11 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <string>
 #include "defs.h"
 
-
 using namespace std;
-
-struct ScrollingBackground{
-    SDL_Texture* texture;
-    int scrollingOffset = 0;
-    int width, height;
-    bool isScrolling = true;
-
-    void setTexture(SDL_Texture* _texture){
-        texture = _texture;
-        SDL_QueryTexture(texture, NULL, NULL, &width, &height);
-    }
-
-    void scroll(int distance){
-    if(isScrolling){
-        scrollingOffset -= distance;
-        if(scrollingOffset < 0){
-            scrollingOffset = width;
-        }
-    }
-}
-
-};
-
 
 struct Graphics{
     SDL_Renderer *renderer;
@@ -70,6 +47,21 @@ struct Graphics{
         if (TTF_Init() == -1){
             logErrorAndExit("SDL_ttf could not initialize! SDL_ttf Error: ", TTF_GetError());
         }
+        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
+               logErrorAndExit( "SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+                                Mix_GetError() );
+            }
+
+    }
+
+
+    void prepareScene(SDL_Texture * background){
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy( renderer, background, NULL, NULL);
+    }
+
+    void presentScene(){
+        SDL_RenderPresent(renderer);
     }
 
 
@@ -93,6 +85,7 @@ struct Graphics{
 
 
     void quitSDL(){
+        Mix_Quit();
         TTF_Quit();
         IMG_Quit();
         SDL_DestroyRenderer(renderer);
@@ -101,11 +94,6 @@ struct Graphics{
     }
 
 
-    void render(const ScrollingBackground& background){
-        renderTexture(background.texture, background.scrollingOffset, 0);
-        renderTexture(background.texture, background.scrollingOffset - background.width, 0);
-    }
-
     TTF_Font* loadFont(const char* path, int size){
         TTF_Font* gFont = TTF_OpenFont( path, size );
         if (gFont == nullptr) {
@@ -113,6 +101,45 @@ struct Graphics{
         }
             return gFont;
     }
+
+
+    void renderText(const string text, TTF_Font* font, SDL_Color color, int x, int y, SDL_Renderer *renderer) {
+        SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
+        if (surface == nullptr) {
+            logErrorAndExit("Unable to render text surface! SDL_ttf Error: ", TTF_GetError());
+        }
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+        if (texture == nullptr) {
+            logErrorAndExit("Unable to create texture from rendered text! SDL Error: ", SDL_GetError());
+            SDL_FreeSurface(surface);
+        }
+        SDL_Rect destRect = {x, y, surface->w, surface->h};
+        SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+
+        SDL_FreeSurface(surface);
+        SDL_DestroyTexture(texture);
+    }
+
+
+    Mix_Music *loadMusic(const char* path){
+        Mix_Music *gMusic = Mix_LoadMUS(path);
+        if (gMusic == nullptr) {
+            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not load music! SDL_mixer Error: %s", Mix_GetError());
+        }
+        return gMusic;
+    }
+
+    void play(Mix_Music *gMusic){
+        if (gMusic == nullptr) return;
+
+        if (Mix_PlayingMusic() == 0){
+            Mix_PlayMusic( gMusic, -1 );
+        }
+        else if( Mix_PausedMusic() == 1 ){
+            Mix_ResumeMusic();
+        }
+    }
+
 };
 
 #endif

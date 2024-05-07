@@ -1,18 +1,16 @@
 #ifndef _TILE__H
 #define _TILE__H
 
-#include <iostream>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <string>
 #include "defs.h"
 
 using namespace std;
 
 class Tile {
 private:
-    int value = 0;
     SDL_Rect tileRect;
+    int value = 0;
     SDL_Surface* textSurface = NULL;
     SDL_Texture* Text = NULL;
     TTF_Font* font = NULL;
@@ -23,7 +21,7 @@ public:
     Tile() : tileRect({0, 0, 0, 0}), value(0), textSurface(NULL), Text(NULL), font(NULL){}
 
     Tile(int x, int y, int size, int val, SDL_Color color) : tileRect({x, y, size, size}), value(val), tileColor(color){
-        font = TTF_OpenFont("assets/PTF-NORDIC-Rnd.ttf", 100);
+        font = TTF_OpenFont("assets/CabalBold-78yP.ttf", 80);
     }
 
     void updateColor(){
