@@ -33,7 +33,7 @@
 	"defs.h"
 	<SDL.h>
 
-1715101130 source:c:\users\administrator\desktop\github\sdlgame\game2048\main.cpp
+1715268207 source:c:\users\administrator\desktop\github\sdlgame\game2048\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -45,9 +45,9 @@
 	"matrix.h"
 	"menu.h"
 
-1715077153 c:\users\administrator\desktop\github\sdlgame\game2048\defs.h
+1715101529 c:\users\administrator\desktop\github\sdlgame\game2048\defs.h
 
-1715100374 c:\users\administrator\desktop\github\sdlgame\game2048\graphics.h
+1715262549 c:\users\administrator\desktop\github\sdlgame\game2048\graphics.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -55,12 +55,12 @@
 	<string>
 	"defs.h"
 
-1714913820 c:\users\administrator\desktop\github\sdlgame\game2048\tile.h
+1715262594 c:\users\administrator\desktop\github\sdlgame\game2048\tile.h
 	<SDL.h>
 	<SDL_ttf.h>
 	"defs.h"
 
-1715100766 c:\users\administrator\desktop\github\sdlgame\game2048\matrix.h
+1715268233 c:\users\administrator\desktop\github\sdlgame\game2048\matrix.h
 	<fstream>
 	<ctime>
 	<string>
@@ -68,6 +68,6 @@
 	"tile.h"
 	"defs.h"
 
-1715100568 c:\users\administrator\desktop\github\sdlgame\game2048\menu.h
+1715264287 c:\users\administrator\desktop\github\sdlgame\game2048\menu.h
 	"graphics.h"
 

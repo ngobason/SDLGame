@@ -8,13 +8,13 @@ private:
     SDL_Renderer* renderer;
     SDL_Texture* menuImage;
     SDL_Texture* startButtonImage;
-    SDL_Texture* settingButtonImage;
+    SDL_Texture* resetButtonImage;
     SDL_Texture* gameOverImage;
     SDL_Texture* winGameImage;
 
 public:
     ImageManager(SDL_Renderer* rend) : renderer(rend), menuImage(NULL), startButtonImage(NULL),
-    settingButtonImage(NULL), gameOverImage(NULL) {}
+    resetButtonImage(NULL), gameOverImage(NULL) {}
 
     bool loadMenuImage(const char* filename) {
         SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
@@ -44,15 +44,15 @@ public:
         return true;
     }
 
-    bool loadSettingButtonImage(const char* filename) {
+    bool loadResetButtonImage(const char* filename) {
         SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", filename);
         SDL_Surface* surface = IMG_Load(filename);
         if (!surface) {
             return false;
         }
-        settingButtonImage = SDL_CreateTextureFromSurface(renderer, surface);
+        resetButtonImage = SDL_CreateTextureFromSurface(renderer, surface);
         SDL_FreeSurface(surface);
-        if (!settingButtonImage) {
+        if (!resetButtonImage) {
             return false;
         }
         return true;
@@ -100,10 +100,10 @@ public:
         }
     }
 
-    void renderSettingButton(int x, int y, int width, int height) {
-        if (settingButtonImage) {
+    void renderResetButton(int x, int y, int width, int height) {
+        if (resetButtonImage) {
             SDL_Rect destRect = {x, y, width, height};
-            SDL_RenderCopy(renderer, settingButtonImage, NULL, &destRect);
+            SDL_RenderCopy(renderer, resetButtonImage, NULL, &destRect);
         }
     }
     void renderGameOverImage(int x, int y, int width, int height) {
@@ -129,9 +129,9 @@ public:
             SDL_DestroyTexture(startButtonImage);
             startButtonImage = NULL;
         }
-        if (settingButtonImage) {
-            SDL_DestroyTexture(settingButtonImage);
-            settingButtonImage = NULL;
+        if (resetButtonImage) {
+            SDL_DestroyTexture(resetButtonImage);
+            resetButtonImage = NULL;
         }
         if (gameOverImage) {
             SDL_DestroyTexture(gameOverImage);

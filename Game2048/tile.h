@@ -69,7 +69,7 @@ public:
     }
 
     void render(SDL_Renderer* renderer){
-        SDL_SetRenderDrawColor(renderer, tileColor.r, tileColor.g, tileColor.b, 0); // Set tile color
+        SDL_SetRenderDrawColor(renderer, tileColor.r, tileColor.g, tileColor.b, 0);
         SDL_RenderFillRect(renderer, &tileRect);
 
         if(value > 0){

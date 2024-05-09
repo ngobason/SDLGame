@@ -39,12 +39,11 @@ int main(int argc, char* argv[]) {
     graphics.init();
 
     ImageManager imageManager(graphics.renderer);
-
-    imageManager.loadMenuImage("menu.png");
-    imageManager.loadStartButtonImage("StartButton.png");
-    imageManager.loadSettingButtonImage("SettingButton.png");
-    imageManager.loadGameOverImage("lose.png");
-    imageManager.loadWinGameImage("win.png");
+    imageManager.loadMenuImage("assets/menu.png");
+    imageManager.loadStartButtonImage("assets/StartButton.png");
+    imageManager.loadGameOverImage("assets/lose.png");
+    imageManager.loadWinGameImage("assets/win.png");
+    imageManager.loadResetButtonImage("assets/reset.png");
 
     SDL_Texture* background = graphics.loadTexture(BACKGROUND_IMG);
     graphics.prepareScene(background);
@@ -56,12 +55,11 @@ int main(int argc, char* argv[]) {
     Matrix matrix;
     matrix.loadHighScore();
 
-    Button startButton = {165, 230, 250, 250, false};
-    Button settingButton = {165, 375, 250, 260, false};
-
+    Button startButton;
+    Button resetButton;
 
     GameState gameState = MENU;
-    Mix_Music *gMusic = graphics.loadMusic("assets/Cardigan.mp3");
+    Mix_Music *gMusic = graphics.loadMusic("assets/GameMusic.mp3");
     SDL_Event event;
 
     while(true){
@@ -71,11 +69,18 @@ int main(int argc, char* argv[]) {
             }
             if (event.type == SDL_MOUSEMOTION){
                 startButton.Clicked = MouseInButton(startButton, event.motion.x, event.motion.y);
-                settingButton.Clicked = MouseInButton(settingButton, event.motion.x, event.motion.y);
+                resetButton.Clicked = MouseInButton(resetButton, event.motion.x, event.motion.y);
             }
             if (event.type == SDL_MOUSEBUTTONDOWN){
                 if (startButton.Clicked && gameState == MENU){
                     gameState = PLAYING;
+                    Mix_PlayMusic(gMusic, -1);
+                }
+            }
+            if (event.type == SDL_MOUSEBUTTONDOWN){
+                if (resetButton.Clicked) {
+                    gameState = PLAYING;
+                    matrix.resetGame();
                     Mix_PlayMusic(gMusic, -1);
                 }
             }
@@ -88,31 +93,17 @@ int main(int argc, char* argv[]) {
             case MENU:
                 imageManager.renderMenuImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                 imageManager.renderStartButton(startButton.x, startButton.y, startButton.width, startButton.height);
-                imageManager.renderSettingButton(settingButton.x, settingButton.y, settingButton.width, settingButton.height);
-
-                if (startButton.Clicked) {
-                    startButton.x = 140;
-                    startButton.y = 210;
+                if (startButton.Clicked){
+                    startButton.x = 130;
+                    startButton.y = 380;
                     startButton.width = 300;
                     startButton.height = 300;
                 }
                 else {
-                    startButton.x = 165;
-                    startButton.y = 230;
+                    startButton.x = 150;
+                    startButton.y = 400;
                     startButton.width = 250;
                     startButton.height = 250;
-                }
-                if (settingButton.Clicked) {
-                    settingButton.x = 150;
-                    settingButton.y = 355;
-                    settingButton.width = 300;
-                    settingButton.height = 310;
-                }
-                else {
-                    settingButton.x = 165;
-                    settingButton.y = 375;
-                    settingButton.width = 250;
-                    settingButton.height = 260;
                 }
                 break;
             case PLAYING:
@@ -132,17 +123,41 @@ int main(int argc, char* argv[]) {
                 break;
             case WIN_GAME:
                 imageManager.renderWinGameImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-                matrix.renderScore(graphics.renderer, font, graphics, 350, 420);
-                matrix.renderHighScore(graphics.renderer, font, graphics, 350, 530);
-                graphics.renderText("GOOD JOB!", font, textColor, 70, 10, graphics.renderer);
-                SDL_Delay(1000);
+                imageManager.renderResetButton(resetButton.x, resetButton.y, resetButton.width, resetButton.height);
+                matrix.renderScore(graphics.renderer, font, graphics, 350, 450);
+                matrix.renderHighScore(graphics.renderer, font, graphics, 350, 550);
+                graphics.renderText("Play again ?", font, textColor, 70, 10, graphics.renderer);
+                if (resetButton.Clicked){
+                    resetButton.x = 170;
+                    resetButton.y = 60;
+                    resetButton.width = 210;
+                    resetButton.height = 210;
+                }
+                else {
+                    resetButton.x = 190;
+                    resetButton.y = 80;
+                    resetButton.width = 180;
+                    resetButton.height = 180;
+                }
                 break;
             case GAME_OVER:
                 imageManager.renderGameOverImage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                imageManager.renderResetButton(resetButton.x, resetButton.y, resetButton.width, resetButton.height);
                 matrix.renderScore(graphics.renderer, font, graphics, 800, 450);
-                matrix.renderHighScore(graphics.renderer, font, graphics, 800, 555);
+                matrix.renderHighScore(graphics.renderer, font, graphics, 800, 535);
                 graphics.renderText("Try again next time", font, textColor, 280, 10, graphics.renderer);
-                SDL_Delay(1000);
+                if (resetButton.Clicked){
+                    resetButton.x = 630;
+                    resetButton.y = 120;
+                    resetButton.width = 210;
+                    resetButton.height = 210;
+                }
+                else {
+                    resetButton.x = 650;
+                    resetButton.y = 140;
+                    resetButton.width = 180;
+                    resetButton.height = 180;
+                }
                 break;
         }
         SDL_RenderPresent(graphics.renderer);

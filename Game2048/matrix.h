@@ -164,7 +164,7 @@ public:
     bool CheckIfWin(){
         for (int i = 0; i < ROWS; ++i){
             for (int j = 0; j < COLS; ++j){
-                if (tiles[i][j].getValue() == 128){
+                if (tiles[i][j].getValue() == 64){
                     return true;
                 }
             }
@@ -228,6 +228,19 @@ public:
     void resetHighScore(){
         highScore = 0;
         saveHighScore();
+    }
+
+    void resetGame() {
+        for (int i = 0; i < ROWS; ++i) {
+            for (int j = 0; j < COLS; ++j) {
+                tiles[i][j].setValue(0);
+            }
+        }
+        score = 0;
+        updateCurrentScore();
+
+        GenerateTile();
+        GenerateTile();
     }
 
     void Events(SDL_Window* window, SDL_Event event){

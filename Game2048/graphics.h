@@ -124,7 +124,8 @@ struct Graphics{
     Mix_Music *loadMusic(const char* path){
         Mix_Music *gMusic = Mix_LoadMUS(path);
         if (gMusic == nullptr) {
-            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Could not load music! SDL_mixer Error: %s", Mix_GetError());
+            SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
+                           "Could not load music! SDL_mixer Error: %s", Mix_GetError());
         }
         return gMusic;
     }
