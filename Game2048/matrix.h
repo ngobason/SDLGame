@@ -164,7 +164,7 @@ public:
     bool CheckIfWin(){
         for (int i = 0; i < ROWS; ++i){
             for (int j = 0; j < COLS; ++j){
-                if (tiles[i][j].getValue() == 64){
+                if (tiles[i][j].getValue() == 2048){
                     return true;
                 }
             }
